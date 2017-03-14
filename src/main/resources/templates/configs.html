@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head lang="en">
+    <title>AB Test Config</title>
+    <meta id="viewport" content="width=device-width, initial-scale=1.0"> </meta>
+    <link href="/webjars/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet" media="screen"> </link>
+</head>
+<body>
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="/webjars/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+<div class="container">
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/configs#">Configs</a>
+            </div>
+        </div>
+    </nav>
+
+    <h2>List</h2>
+
+    <div th:if="${not #lists.isEmpty(configs)}">
+        <table class="table table-striped">
+            <tr>
+                <th>Name</th>
+                <th>View</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+            <tr th:each="config : ${configs}">
+                <td th:text="${config}"><a href="/config/${config}">Id</a></td>
+                <td><a th:href="${ '/config/' + config}">View</a></td>
+                <td><a th:href="${'/config/edit/' + config}">Edit</a></td>
+                <td><a th:href="${'/config/delete/' + config}">Delete</a></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="btn-group">
+        <a type="button" class="btn btn-default" href="/config/new">New</a>
+    </div>
+</div>
+
+</body>
+</html>
