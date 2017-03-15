@@ -29,7 +29,7 @@ public class PigeonContext implements Runnable {
 
     public void start() throws Exception {
         logger.info("start pigeon");
-        ZookeeperConfig zookeeperConfig =new ZookeeperConfig("localhost:2181", "/pigeon");
+        ZookeeperConfig zookeeperConfig =new ZookeeperConfig("storm01:2181,storm02:2181", "/pigeon");
         logger.info("zookeeper config: {}", zookeeperConfig);
 
         watcher = new ZookeeperNodeAgent(zookeeperConfig, "/");
