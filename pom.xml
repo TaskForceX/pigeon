@@ -5,7 +5,7 @@
     <artifactId>pigeon</artifactId>
     <groupId>com.baixing.pigeon</groupId>
     <version>0.0.1</version>
-    <id>pigeon</id>
+    <name>pigeon</name>
 
     <properties>
         <struts.version>2.3.16.2</struts.version>
