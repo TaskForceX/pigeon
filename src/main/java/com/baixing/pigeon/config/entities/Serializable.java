@@ -9,4 +9,6 @@ public interface Serializable {
     void parseFromString(String s) throws IOException;
 
     String serializeToPrettyString() throws IOException;
+
+    String serializeToString() throws IOException;
 }

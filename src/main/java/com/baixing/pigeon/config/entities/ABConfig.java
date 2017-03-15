@@ -12,14 +12,14 @@ import java.util.Set;
 /**
  * Created by onesuper on 13/03/2017.
  */
-public class ABConfig extends Config implements Serializable {
+public class ABConfig extends TransientConfig implements Serializable {
 
     private static int DEFAULT_CONFIG_DELAY = 3600;
 
     private List<ABGroup> groups = new ArrayList<>();
     private Long startTime = System.currentTimeMillis() / 1000;
     private Long endTime = System.currentTimeMillis() / 1000 + DEFAULT_CONFIG_DELAY;
-    private Boolean enabled = false;
+    private ConfigStatus status = ConfigStatus.READY;
 
     public ABConfig() {
     }
@@ -30,6 +30,85 @@ public class ABConfig extends Config implements Serializable {
 
     public void setGroups(List<ABGroup> groups) {
         this.groups = groups;
+    }
+
+    public Long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
+    }
+
+    public Long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Long endTime) {
+        this.endTime = endTime;
+    }
+
+    public ConfigStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ConfigStatus status) {
+        this.status = status;
+    }
+
+    public void parseFromString(String s) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ABConfig another = mapper.readValue(s, ABConfig.class);
+
+        setId(another.getId());
+        this.groups = another.groups;
+        this.startTime = another.startTime;
+        this.endTime = another.endTime;
+        this.status = another.status;
+    }
+
+    public String serializeToPrettyString() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
+    }
+
+    public String serializeToString() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(this);
+    }
+
+    @Override
+    public boolean tryWork(long currentTime) {
+        if (this.status == ConfigStatus.READY) {
+            if (currentTime > startTime && currentTime < endTime) {
+                this.status = ConfigStatus.WORKING;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean tryExpire(long currentTime) {
+        if (this.status == ConfigStatus.WORKING || this.status == ConfigStatus.READY) {
+            if (currentTime > endTime) {
+                this.status = ConfigStatus.EXPIRED;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void deactivate() {
+        this.status = ConfigStatus.DEACTIVATED;
+    }
+
+
+    @Override
+    public void activate() {
+        this.status = ConfigStatus.READY;
     }
 
     @Override
@@ -74,44 +153,5 @@ public class ABConfig extends Config implements Serializable {
         }
 
         return true;
-    }
-
-    public Long getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Long startTime) {
-        this.startTime = startTime;
-    }
-
-    public Long getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Long endTime) {
-        this.endTime = endTime;
-    }
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public void parseFromString(String s) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        ABConfig another = mapper.readValue(s, ABConfig.class);
-
-        this.groups = another.groups;
-        this.startTime = another.startTime;
-        this.endTime = another.endTime;
-        this.enabled = another.enabled;
-    }
-
-    public String serializeToPrettyString() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
     }
 }
