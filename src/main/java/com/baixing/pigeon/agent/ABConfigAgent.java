@@ -21,7 +21,7 @@ public class ABConfigAgent extends ZookeeperNodeAgent {
 
     @Override
     public void process(UTF8StringZookeeperData data, Notifier notifier) {
-        logger.info("processData: {}", data.getAsString());
+        logger.debug("processData: {}", data.getAsString());
 
         try {
             ABConfig config = new ABConfig();
@@ -44,13 +44,13 @@ public class ABConfigAgent extends ZookeeperNodeAgent {
 
     @Override
     public void processOnDelete(UTF8StringZookeeperData data, Notifier notifier) {
-        logger.info("processDataOnDelete: {}", data.getAsString());
+        logger.debug("processDataOnDelete: {}", data.getAsString());
         notifier.notify(Event.delete(data));
     }
 
     @Override
     public void processOnChange(UTF8StringZookeeperData data, Notifier notifier) {
-        logger.info("processDataOnChange: {}", data.getAsString());
+        logger.debug("processDataOnChange: {}", data.getAsString());
 
         try {
             ABConfig config = new ABConfig();
