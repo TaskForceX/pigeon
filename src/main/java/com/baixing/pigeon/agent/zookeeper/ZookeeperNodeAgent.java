@@ -97,8 +97,6 @@ public abstract class ZookeeperNodeAgent {
         }
     }
 
-
-
     public Notifier getNotifier() {
         return notifier;
     }
