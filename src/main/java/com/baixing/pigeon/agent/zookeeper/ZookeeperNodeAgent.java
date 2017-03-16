@@ -65,8 +65,6 @@ public abstract class ZookeeperNodeAgent {
 
     public void reload() {
         try {
-            logger.info("reload node: {}", nodePath());
-
             List<String> children = client.getChildren().watched().forPath(nodePath());
 
             for (String child: children) {
