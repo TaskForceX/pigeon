@@ -68,6 +68,8 @@ public class ABConfig extends TransientConfig {
                 logger.info("tryWork: {}, {}->{}, ttl={}", this.getId(), this.status, ConfigStatus.WORKING, endTime - currentTime);
                 this.status = ConfigStatus.WORKING;
                 return true;
+            } else {
+                logger.info("tryWork: {}, {}->{}, ttl={}", this.getId(), this.status, this.status, endTime - currentTime);
             }
         }
 
@@ -81,6 +83,8 @@ public class ABConfig extends TransientConfig {
                 logger.info("tryExpire: {}, {}->{}, ttl={}", this.getId(), this.status, ConfigStatus.EXPIRED, endTime - currentTime);
                 this.status = ConfigStatus.EXPIRED;
                 return true;
+            } else {
+                logger.info("tryExpire: {}, {}->{}, ttl={}", this.getId(), this.status, this.status, endTime - currentTime);
             }
         }
         return false;
