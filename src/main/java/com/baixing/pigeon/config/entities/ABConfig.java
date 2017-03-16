@@ -18,7 +18,7 @@ public class ABConfig extends TransientConfig {
 
     private static Logger logger = LoggerFactory.getLogger(ABConfig.class);
 
-    private static int DEFAULT_CONFIG_DELAY = 3600;
+    private static int DEFAULT_CONFIG_DELAY = 300; // five minutes
 
     private List<ABGroup> groups = new ArrayList<>();
     private Long startTime = System.currentTimeMillis() / 1000;
