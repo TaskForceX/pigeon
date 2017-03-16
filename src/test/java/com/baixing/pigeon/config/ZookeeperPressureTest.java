@@ -1,4 +1,4 @@
-package com.baixing.pigeon.agent.zookeeper;
+package com.baixing.pigeon.config;
 
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
