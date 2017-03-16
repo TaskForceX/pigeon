@@ -7,33 +7,27 @@ import com.baixing.pigeon.agent.entities.ZData;
  */
 public class Event {
 
-    public static enum Type {
-        CREATE,
-        UPDATE,
-        DELETE,
-    }
-
     public static Event create(ZData data) {
-        return new Event(Type.CREATE, data);
+        return new Event(EventType.CREATE, data);
     }
 
     public static Event update(ZData data) {
-        return new Event(Type.UPDATE, data);
+        return new Event(EventType.UPDATE, data);
     }
 
     public static Event delete(ZData data) {
-        return new Event(Type.DELETE, data);
+        return new Event(EventType.DELETE, data);
     }
 
-    private Event(Type type, ZData data) {
+    private Event(EventType type, ZData data) {
         this.type = type;
         this.zdata = data;
     }
 
-    private Type type;
+    private EventType type;
     private ZData zdata;
 
-    public Type getType() {
+    public EventType getType() {
         return type;
     }
 
