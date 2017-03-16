@@ -2,7 +2,6 @@ package com.baixing.pigeon.agent.zookeeper;
 
 import com.baixing.pigeon.agent.entities.UTF8StringZData;
 import com.baixing.pigeon.agent.entities.ZData;
-import com.baixing.pigeon.agent.notifiers.Event;
 import com.google.common.collect.Sets;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.api.CuratorEvent;
@@ -67,9 +66,7 @@ public final class ZookeeperEventListener implements CuratorListener {
                             data.setPayload(client.getData().watched().forPath(childPath));
                             data.setPath(childPath);
 
-                            nodeWatcher.getNotifier().notify(Event.create(data));
-                            logger.debug("NodeCreated: {}, {}", childPath, data);
-
+                            nodeWatcher.processOnCreate(data, nodeWatcher.getNotifier());
                         }
 
                         logger.debug("Deleted: {}, {}", path, deleted);
@@ -78,8 +75,8 @@ public final class ZookeeperEventListener implements CuratorListener {
 
                             ZData data = new UTF8StringZData();
                             data.setPath(childPath);
-                            nodeWatcher.getNotifier().notify(Event.delete(data));
-                            logger.debug("NodeDeleted: {}", childPath);
+
+                            nodeWatcher.processOnDelete(data, nodeWatcher.getNotifier());
                         }
 
                         nodeWatcher.setChildren(watchedChildren);
@@ -90,8 +87,7 @@ public final class ZookeeperEventListener implements CuratorListener {
                         data.setPayload(client.getData().watched().forPath(path));
                         data.setPath(path);
 
-                        nodeWatcher.getNotifier().notify(Event.update(data));
-                        logger.debug("NodeDataChanged: {}, {}", path, data);
+                        nodeWatcher.processOnChange(data, nodeWatcher.getNotifier());
                         break;
                     default:
                         break;

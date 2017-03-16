@@ -32,7 +32,7 @@ public class PigeonContext implements Runnable {
         ZookeeperConfig zookeeperConfig =new ZookeeperConfig("storm01:2181,storm02:2181", "/pigeon");
         logger.info("zookeeper config: {}", zookeeperConfig);
 
-        watcher = new ZookeeperNodeAgent(zookeeperConfig, "/");
+        watcher = new TransientConfigAgent(zookeeperConfig, "/");
     }
 
 }

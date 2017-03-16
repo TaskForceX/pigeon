@@ -1,5 +1,7 @@
 package com.baixing.pigeon.agent.zookeeper;
 
+import com.baixing.pigeon.agent.entities.UTF8StringZData;
+import com.baixing.pigeon.agent.entities.ZData;
 import com.baixing.pigeon.agent.notifiers.Notifier;
 import com.baixing.pigeon.agent.notifiers.StdNotifier;
 import com.google.common.base.Preconditions;
@@ -19,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by onesuper on 03/03/2017.
  */
-public class ZookeeperNodeAgent {
+public abstract class ZookeeperNodeAgent {
     private static Logger logger = LoggerFactory.getLogger(ZookeeperNodeAgent.class);
 
     private CuratorListener listener = new ZookeeperEventListener(this);
@@ -46,7 +48,7 @@ public class ZookeeperNodeAgent {
         client.getCuratorListenable().addListener(listener);
         client.start();
 
-        setChildren(getWatchedChildren());
+        reload();
 
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(new Runnable() {
@@ -58,8 +60,17 @@ public class ZookeeperNodeAgent {
         }, 60000L, zookeeperConfig.getConsistencyCheckRate(), TimeUnit.MILLISECONDS);
     }
 
+    public abstract void process(ZData data, Notifier notifier);
+    public abstract void processOnChange(ZData data, Notifier notifier);
+    public abstract void processOnCreate(ZData data, Notifier notifier);
+    public abstract void processOnDelete(ZData data, Notifier notifier);
+
     public String nodePath() {
      return ZKPaths.makePath(zookeeperConfig.getRootNode(), node);
+    }
+
+    public void reload() {
+        setChildren(getWatchedChildren());
     }
 
     public List<String> getWatchedChildren() {
@@ -70,9 +81,13 @@ public class ZookeeperNodeAgent {
 
             for (String child: children) {
                 String childPath = ZKPaths.makePath(nodePath(), child);
-                client.getData().watched().forPath(childPath);
+                byte[] payload = client.getData().watched().forPath(childPath);
 
-                // TODO: Notifier for every child
+                ZData data = new UTF8StringZData();
+                data.setPayload(payload);
+                data.setPath(childPath);
+
+                process(data, getNotifier());
             }
 
             return children;
@@ -81,6 +96,8 @@ public class ZookeeperNodeAgent {
             return new LinkedList<>();
         }
     }
+
+
 
     public Notifier getNotifier() {
         return notifier;
