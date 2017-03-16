@@ -33,7 +33,7 @@ public final class ZookeeperEventListener implements CuratorListener {
 
             if (watchedEvent.getState() == Watcher.Event.KeeperState.SyncConnected) {
                 String path = watchedEvent.getPath();
-                UTF8StringZData data = new UTF8StringZData();
+                UTF8StringZookeeperData data = new UTF8StringZookeeperData();
                 switch (watchedEvent.getType()) {
 
                     case NodeDeleted:

@@ -55,9 +55,9 @@ public abstract class ZookeeperNodeAgent {
         }, 60000L, zookeeperConfig.getConsistencyCheckRate(), TimeUnit.MILLISECONDS);
     }
 
-    public abstract void process(UTF8StringZData data, Notifier notifier);
-    public abstract void processOnChange(UTF8StringZData data, Notifier notifier);
-    public abstract void processOnDelete(UTF8StringZData data, Notifier notifier);
+    public abstract void process(UTF8StringZookeeperData data, Notifier notifier);
+    public abstract void processOnChange(UTF8StringZookeeperData data, Notifier notifier);
+    public abstract void processOnDelete(UTF8StringZookeeperData data, Notifier notifier);
 
     public String nodePath() {
      return ZKPaths.makePath(zookeeperConfig.getRootNode(), node);
@@ -73,7 +73,7 @@ public abstract class ZookeeperNodeAgent {
                 String childPath = ZKPaths.makePath(nodePath(), child);
                 byte[] payload = client.getData().watched().forPath(childPath);
 
-                UTF8StringZData data = new UTF8StringZData();
+                UTF8StringZookeeperData data = new UTF8StringZookeeperData();
                 data.setPayload(payload);
                 data.setPath(childPath);
 
@@ -108,7 +108,7 @@ public abstract class ZookeeperNodeAgent {
         }
     }
 
-    public void persistZData(ZData data) {
+    public void persistZData(ZookeeperData data) {
         try {
             client.setData().forPath(data.getPath(), data.getPayload());
         } catch (Exception ex) {

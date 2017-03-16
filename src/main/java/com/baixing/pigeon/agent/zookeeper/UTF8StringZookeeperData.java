@@ -5,7 +5,7 @@ import com.google.common.base.Charsets;
 /**
  * Created by onesuper on 08/03/2017.
  */
-public class UTF8StringZData extends ZData {
+public class UTF8StringZookeeperData extends ZookeeperData {
 
     public String getAsString() {
         if (payload == null) {
@@ -17,7 +17,7 @@ public class UTF8StringZData extends ZData {
 
     @Override
     public String toString() {
-        return "UTF8StringZData{" +
+        return "UTF8StringZookeeperData{" +
                 "path=" + getPath()  + ", " +
                 "data=" + getAsString()  +
                 '}';

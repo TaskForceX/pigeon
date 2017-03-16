@@ -1,6 +1,6 @@
 package com.baixing.pigeon.agent;
 
-import com.baixing.pigeon.agent.zookeeper.UTF8StringZData;
+import com.baixing.pigeon.agent.zookeeper.UTF8StringZookeeperData;
 import com.baixing.pigeon.agent.notifiers.Notifier;
 import com.baixing.pigeon.agent.zookeeper.ZookeeperConfig;
 import com.baixing.pigeon.agent.zookeeper.ZookeeperNodeAgent;
@@ -19,7 +19,7 @@ public class ABConfigAgent extends ZookeeperNodeAgent {
     }
 
     @Override
-    public void process(UTF8StringZData data, Notifier notifier) {
+    public void process(UTF8StringZookeeperData data, Notifier notifier) {
         logger.info("processData: {}", data.getAsString());
 
         try {
@@ -38,12 +38,12 @@ public class ABConfigAgent extends ZookeeperNodeAgent {
     }
 
     @Override
-    public void processOnDelete(UTF8StringZData data, Notifier notifier) {
+    public void processOnDelete(UTF8StringZookeeperData data, Notifier notifier) {
         logger.info("processDataOnDelete: {}", data.getAsString());
     }
 
     @Override
-    public void processOnChange(UTF8StringZData data, Notifier notifier) {
+    public void processOnChange(UTF8StringZookeeperData data, Notifier notifier) {
         logger.info("processDataOnChange: {}", data.getAsString());
 
         try {
