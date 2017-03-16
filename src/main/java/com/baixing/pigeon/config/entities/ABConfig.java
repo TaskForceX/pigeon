@@ -18,7 +18,6 @@ public class ABConfig extends TransientConfig {
 
     private static Logger logger = LoggerFactory.getLogger(ABConfig.class);
 
-
     private static int DEFAULT_CONFIG_DELAY = 3600;
 
     private List<ABGroup> groups = new ArrayList<>();
