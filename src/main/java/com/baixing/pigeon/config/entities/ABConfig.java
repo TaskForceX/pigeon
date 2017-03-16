@@ -65,11 +65,11 @@ public class ABConfig extends TransientConfig {
     public boolean tryWork(long currentTime) {
         if (this.status == ConfigStatus.READY) {
             if (currentTime > startTime && currentTime < endTime) {
-                logger.info("tryWork: {}, {}->{}, ttl={}", this.getId(), this.status, ConfigStatus.WORKING, endTime - currentTime);
+                logger.info("tryWork: {}, {}->{}, {}", this.getId(), this.status, ConfigStatus.WORKING, prettyTTL(currentTime));
                 this.status = ConfigStatus.WORKING;
                 return true;
             } else {
-                logger.info("tryWork: {}, {}->{}, ttl={}", this.getId(), this.status, this.status, endTime - currentTime);
+                logger.info("tryWork: {}, {}->{}, {}", this.getId(), this.status, this.status, prettyTTL(currentTime));
             }
         }
 
@@ -80,14 +80,24 @@ public class ABConfig extends TransientConfig {
     public boolean tryExpire(long currentTime) {
         if (this.status == ConfigStatus.WORKING || this.status == ConfigStatus.READY) {
             if (currentTime > endTime) {
-                logger.info("tryExpire: {}, {}->{}, ttl={}", this.getId(), this.status, ConfigStatus.EXPIRED, endTime - currentTime);
+                logger.info("tryExpire: {}, {}->{}, {}", this.getId(), this.status, ConfigStatus.EXPIRED, prettyTTL(currentTime));
                 this.status = ConfigStatus.EXPIRED;
                 return true;
             } else {
-                logger.info("tryExpire: {}, {}->{}, ttl={}", this.getId(), this.status, this.status, endTime - currentTime);
+                logger.info("tryExpire: {}, {}->{}, {}", this.getId(), this.status, this.status, prettyTTL(currentTime));
             }
         }
         return false;
+    }
+
+    private String prettyTTL(long currentTime) {
+        if (currentTime < startTime) {
+            return "time-to-wait: " + (startTime - currentTime);
+        } else if (currentTime < endTime) {
+            return "time-to-live: " + (endTime - currentTime);
+        } else {
+            return "expired-time: " + (currentTime - endTime);
+        }
     }
 
     @Override
