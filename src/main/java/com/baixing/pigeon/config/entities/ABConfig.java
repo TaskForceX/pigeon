@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Created by onesuper on 13/03/2017.
  */
-public class ABConfig extends TransientConfig implements Serializable {
+public class ABConfig extends TransientConfig {
 
     private static int DEFAULT_CONFIG_DELAY = 3600;
 
@@ -56,27 +56,6 @@ public class ABConfig extends TransientConfig implements Serializable {
         this.status = status;
     }
 
-    public void parseFromString(String s) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        ABConfig another = mapper.readValue(s, ABConfig.class);
-
-        setId(another.getId());
-        this.groups = another.groups;
-        this.startTime = another.startTime;
-        this.endTime = another.endTime;
-        this.status = another.status;
-    }
-
-    public String serializeToPrettyString() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
-    }
-
-    public String serializeToString() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(this);
-    }
-
     @Override
     public boolean tryWork(long currentTime) {
         if (this.status == ConfigStatus.READY) {
@@ -105,10 +84,32 @@ public class ABConfig extends TransientConfig implements Serializable {
         this.status = ConfigStatus.DEACTIVATED;
     }
 
-
     @Override
     public void activate() {
         this.status = ConfigStatus.READY;
+    }
+
+    @Override
+    public String serializeToPrettyString() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(this);
+    }
+
+    @Override
+    public String serializeToString() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(this);
+    }
+
+    public void parseFromString(String s) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ABConfig another = mapper.readValue(s, ABConfig.class);
+
+        setId(another.getId());
+        this.groups = another.groups;
+        this.startTime = another.startTime;
+        this.endTime = another.endTime;
+        this.status = another.status;
     }
 
     @Override
