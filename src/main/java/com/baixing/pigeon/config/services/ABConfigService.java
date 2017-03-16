@@ -11,6 +11,8 @@ public interface ABConfigService {
 
     List<String> listAllConfigIds();
 
+    List<ABConfig> listAllConfigs();
+
     ABConfig getConfigById(String id);
 
     ABConfig saveConfig(ABConfig config);

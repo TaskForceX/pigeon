@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +41,23 @@ public class ABConfigServiceImpl implements ABConfigService {
     public List<String> listAllConfigIds() {
         try {
             return curator.getChildren().forPath(ZK_HOME);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
+            throw new ABConfigServiceException(ex.getMessage());
+        }
+    }
+
+    @Override
+    public List<ABConfig> listAllConfigs() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            List<ABConfig> abConfigs = new ArrayList<>();
+            for (String child: curator.getChildren().forPath(ZK_HOME)) {
+                String path = ZKPaths.makePath(ZK_HOME, child);
+                abConfigs.add(mapper.readValue(new String(curator.getData().forPath(path), Charsets.UTF_8), ABConfig.class));
+            }
+
+            return abConfigs;
         } catch (Exception ex) {
             logger.error(ex.getMessage());
             throw new ABConfigServiceException(ex.getMessage());

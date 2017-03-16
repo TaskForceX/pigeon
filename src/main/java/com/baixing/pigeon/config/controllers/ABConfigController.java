@@ -23,7 +23,7 @@ public class ABConfigController {
 
     @RequestMapping(value = "configs", method = RequestMethod.GET)
     public String listAllConfigs(Model model) throws Exception {
-        model.addAttribute("configs", abConfigService.listAllConfigIds());
+        model.addAttribute("configs", abConfigService.listAllConfigs());
         return "configs";
     }
 

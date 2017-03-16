@@ -24,16 +24,22 @@
     <div th:if="${not #lists.isEmpty(configs)}">
         <table class="table table-striped">
             <tr>
-                <th>Name</th>
+                <th>Id</th>
+                <th>Status</th>
+                <th>Start</th>
+                <th>End</th>
                 <th>View</th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
             <tr th:each="config : ${configs}">
-                <td th:text="${config}"><a href="/config/${config}">Id</a></td>
-                <td><a th:href="${ '/config/' + config}">View</a></td>
-                <td><a th:href="${'/config/edit/' + config}">Edit</a></td>
-                <td><a th:href="${'/config/delete/' + config}">Delete</a></td>
+                <td th:text="${config.id}">Id</td>
+                <td th:text="${config.status}"><a href="/config/${config.status}">status</a></td>
+                <td th:text="${#dates.format(new java.util.Date(config.startTime * 1000))}">startTime</td>
+                <td th:text="${#dates.format(new java.util.Date(config.endTime * 1000))}">endTime</td>
+                <td><a th:href="${ '/config/' + config.id}">View</a></td>
+                <td><a th:href="${'/config/edit/' + config.id}">Edit</a></td>
+                <td><a th:href="${'/config/delete/' + config.id}">Delete</a></td>
             </tr>
         </table>
     </div>
