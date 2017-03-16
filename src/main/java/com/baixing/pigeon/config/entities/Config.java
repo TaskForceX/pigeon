@@ -3,15 +3,15 @@ package com.baixing.pigeon.config.entities;
 import com.baixing.pigeon.config.InvalidABConfigException;
 
 import java.io.IOException;
-import java.util.UUID;
+
+import static org.apache.commons.lang.RandomStringUtils.randomAlphanumeric;
 
 /**
  * Created by onesuper on 14/03/2017.
  */
 public abstract class Config {
 
-    private String uid = UUID.randomUUID().toString();
-    private String id = uid.substring(uid.length() - 8);
+    private String id = randomAlphanumeric(8);
 
     public Config() {
     }
