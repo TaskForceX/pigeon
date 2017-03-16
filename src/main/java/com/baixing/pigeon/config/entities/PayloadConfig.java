@@ -23,7 +23,6 @@ public class PayloadConfig extends Config {
         this.payload = payload;
     }
 
-
     @Override
     boolean validate() throws InvalidABConfigException {
         return true;

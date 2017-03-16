@@ -101,6 +101,7 @@ public class ABConfig extends TransientConfig {
         return mapper.writeValueAsString(this);
     }
 
+    @Override
     public void parseFromString(String s) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         ABConfig another = mapper.readValue(s, ABConfig.class);
