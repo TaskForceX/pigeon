@@ -20,8 +20,7 @@ public class ABConfigAgent extends ZookeeperNodeAgent {
 
     @Override
     public void process(UTF8StringZData data, Notifier notifier) {
-        System.out.println("in processData");
-        System.out.println(data);
+        logger.info("processData: {}", data.getAsString());
 
         try {
             ABConfig config = new ABConfig();
@@ -32,21 +31,20 @@ public class ABConfigAgent extends ZookeeperNodeAgent {
 
             if (config.tryExpire(currentTime())) {
             }
+
         } catch (Exception ex) {
-            throw new AgentProcessException(ex);
+            throw new ABConfigAgentException(ex);
         }
     }
 
     @Override
     public void processOnDelete(UTF8StringZData data, Notifier notifier) {
-        System.out.println("in processDataOnDelete");
-        System.out.println(data);
+        logger.info("processDataOnDelete: {}", data.getAsString());
     }
 
     @Override
     public void processOnChange(UTF8StringZData data, Notifier notifier) {
-        System.out.println("in processDataOnChange");
-        System.out.println(data);
+        logger.info("processDataOnChange: {}", data.getAsString());
 
         try {
             ABConfig config = new ABConfig();
@@ -56,7 +54,7 @@ public class ABConfigAgent extends ZookeeperNodeAgent {
             }
 
         } catch (Exception ex) {
-            throw new AgentProcessException(ex);
+            throw new ABConfigAgentException(ex);
         }
     }
 
