@@ -8,16 +8,11 @@ import java.io.IOException;
 /**
  * Created by onesuper on 14/03/2017.
  */
-public class ConfigPayload extends Config {
+public class PayloadConfig extends Config {
 
     private String payload;
 
-    public ConfigPayload() {
-    }
-
-    @Override
-    boolean validate() throws InvalidABConfigException {
-        return true;
+    public PayloadConfig() {
     }
 
     public String getPayload() {
@@ -28,6 +23,11 @@ public class ConfigPayload extends Config {
         this.payload = payload;
     }
 
+
+    @Override
+    boolean validate() throws InvalidABConfigException {
+        return true;
+    }
 
     @Override
     public String serializeToPrettyString() throws IOException {
@@ -43,7 +43,7 @@ public class ConfigPayload extends Config {
 
     public void parseFromString(String s) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        ConfigPayload another = mapper.readValue(s, ConfigPayload.class);
+        PayloadConfig another = mapper.readValue(s, PayloadConfig.class);
 
         setId(another.getId());
         this.payload = another.payload;

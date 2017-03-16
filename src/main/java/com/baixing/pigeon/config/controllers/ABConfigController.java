@@ -1,7 +1,7 @@
 package com.baixing.pigeon.config.controllers;
 
 import com.baixing.pigeon.config.entities.ABConfig;
-import com.baixing.pigeon.config.entities.ConfigPayload;
+import com.baixing.pigeon.config.entities.PayloadConfig;
 import com.baixing.pigeon.config.services.ABConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +31,7 @@ public class ABConfigController {
     public String getConfig(@PathVariable String id, Model model) throws Exception {
         ABConfig abConfig = abConfigService.getConfigById(id);
 
-        ConfigPayload config = new ConfigPayload();
+        PayloadConfig config = new PayloadConfig();
         config.setId(id);
         config.setPayload(abConfig.serializeToPrettyString());
         model.addAttribute("config", config);
@@ -42,7 +42,7 @@ public class ABConfigController {
     public String editConfig(@PathVariable String id, Model model) throws Exception {
         ABConfig abconfig = abConfigService.getConfigById(id);
 
-        ConfigPayload config = new ConfigPayload();
+        PayloadConfig config = new PayloadConfig();
         config.setId(id);
         config.setPayload(abconfig.serializeToPrettyString());
         model.addAttribute("config", config);
@@ -51,13 +51,13 @@ public class ABConfigController {
 
     @RequestMapping("config/new")
     public String newConfig(Model model) {
-        ConfigPayload config = new ConfigPayload();
+        PayloadConfig config = new PayloadConfig();
         model.addAttribute("config", config);
         return "configform";
     }
 
     @RequestMapping(value = "config", method = RequestMethod.POST)
-    public String saveConfig(@ModelAttribute ConfigPayload config) throws Exception {
+    public String saveConfig(@ModelAttribute PayloadConfig config) throws Exception {
         ABConfig abconfig = new ABConfig();
         abconfig.parseFromString(config.getPayload());
         abconfig.setId(config.getId());
