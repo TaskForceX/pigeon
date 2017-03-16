@@ -11,6 +11,11 @@ public class UTF8StringZData extends ZData {
     public void setPayload(byte[] payload) {
         data  =  new String(payload, Charsets.UTF_8);
     }
+
+    public String getAsString() {
+        return data;
+    }
+
     @Override
     public String toString() {
         return "UTF8StringZData{" +
