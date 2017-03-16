@@ -82,8 +82,9 @@ public class ABConfigServiceImpl implements ABConfigService {
 
             if (curator.checkExists().forPath(path) == null) {
                 curator.create().forPath(path, payload.getBytes());
+            } else {
+                curator.setData().forPath(path, payload.getBytes());
             }
-            curator.setData().forPath(path, payload.getBytes());
             logger.info("update config {} => {}", path, config);
             return config;
         } catch (Exception ex) {
