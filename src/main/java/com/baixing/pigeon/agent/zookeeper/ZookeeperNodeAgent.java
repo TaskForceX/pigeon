@@ -1,7 +1,5 @@
 package com.baixing.pigeon.agent.zookeeper;
 
-import com.baixing.pigeon.agent.entities.UTF8StringZData;
-import com.baixing.pigeon.agent.entities.ZData;
 import com.baixing.pigeon.agent.notifiers.Notifier;
 import com.baixing.pigeon.agent.notifiers.StdNotifier;
 import com.google.common.base.Preconditions;

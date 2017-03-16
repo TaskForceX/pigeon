@@ -1,4 +1,4 @@
-package com.baixing.pigeon.agent.entities;
+package com.baixing.pigeon.agent.zookeeper;
 
 import com.google.common.base.Charsets;
 

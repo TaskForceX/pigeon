@@ -1,6 +1,6 @@
 package com.baixing.pigeon.agent.notifiers;
 
-import com.baixing.pigeon.agent.entities.ZData;
+import com.baixing.pigeon.agent.zookeeper.ZData;
 
 /**
  * Created by onesuper on 08/03/2017.

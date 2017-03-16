@@ -1,6 +1,5 @@
 package com.baixing.pigeon.agent.zookeeper;
 
-import com.baixing.pigeon.agent.entities.UTF8StringZData;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.api.CuratorEvent;
 import org.apache.curator.framework.api.CuratorListener;

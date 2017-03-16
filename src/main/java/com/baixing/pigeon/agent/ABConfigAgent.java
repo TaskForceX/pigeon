@@ -1,6 +1,6 @@
 package com.baixing.pigeon.agent;
 
-import com.baixing.pigeon.agent.entities.UTF8StringZData;
+import com.baixing.pigeon.agent.zookeeper.UTF8StringZData;
 import com.baixing.pigeon.agent.notifiers.Notifier;
 import com.baixing.pigeon.agent.zookeeper.ZookeeperConfig;
 import com.baixing.pigeon.agent.zookeeper.ZookeeperNodeAgent;

@@ -1,4 +1,4 @@
-package com.baixing.pigeon.agent.entities;
+package com.baixing.pigeon.agent.zookeeper;
 
 /**
  * Created by onesuper on 08/03/2017.
