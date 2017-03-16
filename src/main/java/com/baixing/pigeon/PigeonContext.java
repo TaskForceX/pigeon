@@ -1,5 +1,6 @@
-package com.baixing.pigeon.agent;
+package com.baixing.pigeon;
 
+import com.baixing.pigeon.agent.ABConfigAgent;
 import com.baixing.pigeon.agent.zookeeper.ZookeeperConfig;
 import com.baixing.pigeon.agent.zookeeper.ZookeeperNodeAgent;
 import org.slf4j.Logger;

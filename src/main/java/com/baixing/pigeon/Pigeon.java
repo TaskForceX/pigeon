@@ -1,4 +1,4 @@
-package com.baixing.pigeon.agent;
+package com.baixing.pigeon;
 
 /**
  * Created by onesuper on 03/03/2017.
