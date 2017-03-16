@@ -5,8 +5,15 @@ package com.baixing.pigeon.agent.entities;
  */
 public abstract class ZData {
     String path;
+    byte[] payload;
 
-    public abstract void setPayload(byte[] payload);
+    public void setPayload(byte[] payload) {
+        this.payload = payload;
+    }
+
+    public byte[] getPayload() {
+        return payload;
+    }
 
     public void setPath(String path) {
         this.path = path;
