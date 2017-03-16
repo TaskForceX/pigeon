@@ -2,6 +2,8 @@ package com.baixing.pigeon.config.entities;
 
 import com.baixing.pigeon.config.InvalidABConfigException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,11 +16,15 @@ import java.util.Set;
  */
 public class ABConfig extends TransientConfig {
 
+    private static Logger logger = LoggerFactory.getLogger(ABConfig.class);
+
+
     private static int DEFAULT_CONFIG_DELAY = 3600;
 
     private List<ABGroup> groups = new ArrayList<>();
     private Long startTime = System.currentTimeMillis() / 1000;
     private Long endTime = System.currentTimeMillis() / 1000 + DEFAULT_CONFIG_DELAY;
+
     private ConfigStatus status = ConfigStatus.READY;
 
     public ABConfig() {
@@ -60,6 +66,7 @@ public class ABConfig extends TransientConfig {
     public boolean tryWork(long currentTime) {
         if (this.status == ConfigStatus.READY) {
             if (currentTime > startTime && currentTime < endTime) {
+                logger.info("tryWork: {}, {}->{}, ttl={}", this.getId(), this.status, ConfigStatus.WORKING, endTime - currentTime);
                 this.status = ConfigStatus.WORKING;
                 return true;
             }
@@ -72,6 +79,7 @@ public class ABConfig extends TransientConfig {
     public boolean tryExpire(long currentTime) {
         if (this.status == ConfigStatus.WORKING || this.status == ConfigStatus.READY) {
             if (currentTime > endTime) {
+                logger.info("tryExpire: {}, {}->{}, ttl={}", this.getId(), this.status, ConfigStatus.EXPIRED, endTime - currentTime);
                 this.status = ConfigStatus.EXPIRED;
                 return true;
             }
@@ -81,11 +89,15 @@ public class ABConfig extends TransientConfig {
 
     @Override
     public void deactivate() {
+        logger.info("deactivate: {}, {}->{}", this.getId(), this.status, ConfigStatus.DEACTIVATED);
+
         this.status = ConfigStatus.DEACTIVATED;
     }
 
     @Override
     public void activate() {
+        logger.info("activate: {}, {}->{}", this.getId(), this.status, ConfigStatus.READY);
+
         this.status = ConfigStatus.READY;
     }
 
