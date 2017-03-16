@@ -12,7 +12,6 @@ import org.apache.curator.utils.ZKPaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -28,8 +27,6 @@ public abstract class ZookeeperNodeAgent {
     private CuratorFramework client;
     private ZookeeperConfig zookeeperConfig;
     private String node;
-
-    private List<String> children = new LinkedList<>();
 
     private ScheduledExecutorService scheduler;
 
@@ -54,28 +51,23 @@ public abstract class ZookeeperNodeAgent {
         scheduler.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                logger.trace("consistency check for node: {}", node);
-//                setChildren(getWatchedChildren());
+                logger.trace("reload node: {}", node);
+                reload();
             }
         }, 60000L, zookeeperConfig.getConsistencyCheckRate(), TimeUnit.MILLISECONDS);
     }
 
-    public abstract void process(ZData data, Notifier notifier);
-    public abstract void processOnChange(ZData data, Notifier notifier);
-    public abstract void processOnCreate(ZData data, Notifier notifier);
-    public abstract void processOnDelete(ZData data, Notifier notifier);
+    public abstract void process(UTF8StringZData data, Notifier notifier);
+    public abstract void processOnChange(UTF8StringZData data, Notifier notifier);
+    public abstract void processOnDelete(UTF8StringZData data, Notifier notifier);
 
     public String nodePath() {
      return ZKPaths.makePath(zookeeperConfig.getRootNode(), node);
     }
 
     public void reload() {
-        setChildren(getWatchedChildren());
-    }
-
-    public List<String> getWatchedChildren() {
         try {
-            logger.info("watch node: {}", nodePath());
+            logger.info("reload node: {}", nodePath());
 
             List<String> children = client.getChildren().watched().forPath(nodePath());
 
@@ -83,30 +75,28 @@ public abstract class ZookeeperNodeAgent {
                 String childPath = ZKPaths.makePath(nodePath(), child);
                 byte[] payload = client.getData().watched().forPath(childPath);
 
-                ZData data = new UTF8StringZData();
+                UTF8StringZData data = new UTF8StringZData();
                 data.setPayload(payload);
                 data.setPath(childPath);
 
                 process(data, getNotifier());
             }
 
-            return children;
         } catch (Exception ex) {
             logger.error("zookeeper error: {}", ex);
-            return new LinkedList<>();
+        }
+    }
+
+    public void rewatch() {
+        try {
+            client.getChildren().watched().forPath(nodePath());
+        } catch (Exception ex) {
+            logger.error("zookeeper error: {}", ex);
         }
     }
 
     public Notifier getNotifier() {
         return notifier;
-    }
-
-    public List<String> getChildren() {
-        return children;
-    }
-
-    public void setChildren(final List<String> children) {
-        this.children = children;
     }
 
     public void close() {
@@ -117,6 +107,14 @@ public abstract class ZookeeperNodeAgent {
             logger.debug("remove node listener for node: {}", node);
             client.getCuratorListenable().removeListener(listener);
             client.close();
+        }
+    }
+
+    public void persistZData(ZData data) {
+        try {
+            client.setData().forPath(data.getPath(), data.getPayload());
+        } catch (Exception ex) {
+            logger.error("zookeeper error: {}", ex);
         }
     }
 }
