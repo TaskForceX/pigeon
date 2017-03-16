@@ -1,7 +1,8 @@
 package com.baixing.pigeon.agent;
 
-import com.baixing.pigeon.agent.zookeeper.UTF8StringZookeeperData;
+import com.baixing.pigeon.agent.notifiers.Event;
 import com.baixing.pigeon.agent.notifiers.Notifier;
+import com.baixing.pigeon.agent.zookeeper.UTF8StringZookeeperData;
 import com.baixing.pigeon.agent.zookeeper.ZookeeperConfig;
 import com.baixing.pigeon.agent.zookeeper.ZookeeperNodeAgent;
 import com.baixing.pigeon.config.entities.ABConfig;
@@ -27,9 +28,13 @@ public class ABConfigAgent extends ZookeeperNodeAgent {
             config.parseFromString(data.getAsString());
 
             if (config.tryWork(currentTime())) {
+                persistConfig(data.getPath(), config);
+                notifier.notify(Event.create(data));
             }
 
             if (config.tryExpire(currentTime())) {
+                persistConfig(data.getPath(), config);
+                notifier.notify(Event.delete(data));
             }
 
         } catch (Exception ex) {
@@ -40,6 +45,7 @@ public class ABConfigAgent extends ZookeeperNodeAgent {
     @Override
     public void processOnDelete(UTF8StringZookeeperData data, Notifier notifier) {
         logger.info("processDataOnDelete: {}", data.getAsString());
+        notifier.notify(Event.delete(data));
     }
 
     @Override
@@ -51,11 +57,20 @@ public class ABConfigAgent extends ZookeeperNodeAgent {
             config.parseFromString(data.getAsString());
 
             if (config.tryWork(System.currentTimeMillis())) {
+                persistConfig(data.getPath(), config);
+                notifier.notify(Event.create(data));
             }
 
         } catch (Exception ex) {
             throw new ABConfigAgentException(ex);
         }
+    }
+
+    private void persistConfig(String path, ABConfig config) throws Exception {
+        UTF8StringZookeeperData newData = new UTF8StringZookeeperData();
+        newData.setPath(path);
+        newData.setUTF8String(config.serializeToString());
+        persistZookeeperData(newData);
     }
 
     private long currentTime() {

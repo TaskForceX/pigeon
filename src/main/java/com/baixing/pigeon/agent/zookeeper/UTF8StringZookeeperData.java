@@ -15,6 +15,10 @@ public class UTF8StringZookeeperData extends ZookeeperData {
         return new String(payload, Charsets.UTF_8);
     }
 
+    public void setUTF8String(String s) {
+        setPayload(s.getBytes());
+    }
+
     @Override
     public String toString() {
         return "UTF8StringZookeeperData{" +

@@ -108,7 +108,7 @@ public abstract class ZookeeperNodeAgent {
         }
     }
 
-    public void persistZData(ZookeeperData data) {
+    public void persistZookeeperData(ZookeeperData data) {
         try {
             client.setData().forPath(data.getPath(), data.getPayload());
         } catch (Exception ex) {
